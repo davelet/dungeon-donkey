@@ -3,6 +3,7 @@ mod player;
 mod map_builder;
 
 use bracket_lib::prelude::Point;
+use bracket_lib::random::RandomNumberGenerator;
 use bracket_lib::terminal::GameState;
 use prelude::*;
 
@@ -42,9 +43,11 @@ impl GameState for State {
 
 impl State {
     fn new() -> Self {
+        let mut rng = RandomNumberGenerator::new();
+        let mb = MapBuilder::new(&mut rng);
         Self {
-            map: Map::new(),
-            player: Player::new(Point::new(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)),
+            map: mb.map,
+            player: Player::new(mb.player_start),
         }
     }
 }
