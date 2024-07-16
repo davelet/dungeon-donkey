@@ -1,5 +1,8 @@
 mod map;
+mod player;
+mod map_builder;
 
+use bracket_lib::prelude::Point;
 use bracket_lib::terminal::GameState;
 use prelude::*;
 
@@ -10,6 +13,8 @@ mod prelude {
     pub(crate) const SCREEN_HEIGHT: i32 = 50;
 
     pub(crate) use crate::map::*;
+    pub(crate) use crate::player::*;
+    pub(crate) use crate::map_builder::*;
 }
 
 
@@ -22,12 +27,15 @@ fn main() -> BError {
 
 struct State {
     map: Map,
+    player: Player,
 }
 
 impl GameState for State {
     fn tick(&mut self, ctx: &mut BTerm) {
         ctx.cls();
-        self.map.render(ctx)
+        self.player.update(ctx, &self.map);
+        self.map.render(ctx);
+        self.player.render(ctx);
     }
 }
 
@@ -35,7 +43,8 @@ impl GameState for State {
 impl State {
     fn new() -> Self {
         Self {
-            map: Map::new()
+            map: Map::new(),
+            player: Player::new(Point::new(SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2)),
         }
     }
 }
