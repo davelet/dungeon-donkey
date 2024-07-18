@@ -23,17 +23,20 @@ pub struct Map {
 impl Map {
     pub fn new() -> Self {
         Self {
-            tiles: vec![TileType::Floor; NUM_TILES]
+            tiles: vec![Floor; NUM_TILES]
         }
     }
 
-    pub fn render(&self, ctx: &mut BTerm) {
-        for y in 0..SCREEN_HEIGHT {
-            for x in 0..SCREEN_WIDTH {
-                let idx = map_idx(x, y);
-                match self.tiles[idx] {
-                    Floor => { ctx.set(x, y, YELLOW, BLACK, to_cp437('.')) }
-                    TileType::Wall => { ctx.set(x, y, GREEN, BLACK, to_cp437('#')) }
+    pub fn render(&self, ctx: &mut BTerm, camera: &Camera) {
+        ctx.set_active_console(0);
+        for y in camera.top_y..camera.bottom_y {
+            for x in camera.left_x..camera.right_x {
+                if self.in_bounds(Point::new(x, y)) {
+                    let idx = map_idx(x, y);
+                    match self.tiles[idx] {
+                        Floor => { ctx.set(x, y, YELLOW, BLACK, to_cp437('.')) }
+                        TileType::Wall => { ctx.set(x, y, GREEN, BLACK, to_cp437('#')) }
+                    }
                 }
             }
         }

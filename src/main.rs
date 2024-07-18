@@ -1,34 +1,47 @@
+use bracket_lib::random::RandomNumberGenerator;
+use bracket_lib::terminal::GameState;
+
+use prelude::*;
+
 mod map;
 mod player;
 mod map_builder;
-
-use bracket_lib::prelude::Point;
-use bracket_lib::random::RandomNumberGenerator;
-use bracket_lib::terminal::GameState;
-use prelude::*;
+mod camera;
 
 mod prelude {
     pub(crate) use bracket_lib::prelude::{BError, BTerm, BTermBuilder, main_loop};
 
+    pub(crate) use crate::camera::*;
+    pub(crate) use crate::map::*;
+    pub(crate) use crate::map_builder::*;
+    pub(crate) use crate::player::*;
+
     pub(crate) const SCREEN_WIDTH: i32 = 80;
     pub(crate) const SCREEN_HEIGHT: i32 = 50;
-
-    pub(crate) use crate::map::*;
-    pub(crate) use crate::player::*;
-    pub(crate) use crate::map_builder::*;
 }
 
-
+pub const DISPLAY_WIDTH: i32 = SCREEN_WIDTH / 2;
+pub const DISPLAY_HEIGHT:i32 = SCREEN_HEIGHT / 2;
 fn main() -> BError {
-    let c = BTermBuilder::simple80x50()
+    // let c = BTermBuilder::simple80x50()
+    //     .with_fps_cap(30f32)
+    //     .with_title("Dungeon Donkey").build()?;
+    let c = BTermBuilder::new()
+        .with_title("Dungeon Donkey")
         .with_fps_cap(30f32)
-        .with_title("Dungeon Donkey").build()?;
+        .with_dimensions(DISPLAY_WIDTH, DISPLAY_HEIGHT)
+        .with_resource_path("resources/")
+        .with_font("font.png", 32, 32)
+        .with_simple_console(DISPLAY_WIDTH, DISPLAY_HEIGHT, "font.png")
+        .with_simple_console_no_bg(DISPLAY_WIDTH, DISPLAY_HEIGHT, "font.png")
+        .build()?;
     main_loop(c, State::new())
 }
 
 struct State {
     map: Map,
     player: Player,
+    camera: Camera
 }
 
 impl GameState for State {
@@ -48,6 +61,7 @@ impl State {
         Self {
             map: mb.map,
             player: Player::new(mb.player_start),
+            camera: Camera::new(mb.player_start)
         }
     }
 }
