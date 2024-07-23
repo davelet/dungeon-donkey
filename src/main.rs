@@ -1,3 +1,4 @@
+use bracket_lib::prelude::render_draw_buffer;
 use bracket_lib::random::RandomNumberGenerator;
 use bracket_lib::terminal::GameState;
 
@@ -60,6 +61,7 @@ impl GameState for State {
         ctx.cls();
         self.resources.insert(ctx.key);
         self.systems.execute(&mut self.ecs, &mut self.resources);
+        render_draw_buffer(ctx).expect("TODO: panic message");
     }
 }
 
