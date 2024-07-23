@@ -6,7 +6,7 @@ const NUM_ROOMS: usize = 20;
 
 pub struct MapBuilder {
     pub(crate) map: Map,
-    rooms: Vec<Rect>,
+    pub(crate) rooms: Vec<Rect>,
     pub(crate) player_start: Point,
 }
 
