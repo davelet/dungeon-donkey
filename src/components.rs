@@ -1,4 +1,3 @@
-use bracket_lib::prelude::{ColorPair, FontCharType};
 pub use crate::prelude::*;
 
 #[derive(Copy, Clone, Debug, PartialEq)]
@@ -12,3 +11,6 @@ pub struct Player;
 
 #[derive(Copy, Clone, Debug, PartialEq)]
 pub struct Enemy;
+
+#[derive(Copy, Clone, Debug, PartialEq)]
+pub struct MovingRandomly;

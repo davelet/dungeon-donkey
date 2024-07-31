@@ -1,4 +1,3 @@
-use bracket_lib::prelude::Point;
 use crate::{DISPLAY_HEIGHT, DISPLAY_WIDTH};
 use crate::prelude::*;
 

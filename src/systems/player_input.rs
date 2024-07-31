@@ -1,5 +1,3 @@
-use bracket_lib::prelude::VirtualKeyCode;
-use bracket_lib::terminal::Point;
 
 use crate::prelude::*;
 

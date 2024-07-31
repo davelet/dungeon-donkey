@@ -12,7 +12,7 @@ mod factory;
 mod systems;
 
 mod prelude {
-    pub(crate) use bracket_lib::prelude::{BError, BTerm, BTermBuilder, main_loop};
+    pub(crate) use bracket_lib::prelude::*;
 
     pub(crate) use crate::camera::*;
     pub(crate) use crate::map::*;
