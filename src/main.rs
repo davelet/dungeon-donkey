@@ -24,12 +24,12 @@ mod prelude {
     pub use legion::world::SubWorld;
     pub use legion::systems::CommandBuffer;
 
-    pub(crate) const SCREEN_WIDTH: i32 = 80;
-    pub(crate) const SCREEN_HEIGHT: i32 = 50;
+    pub(crate) const SCREEN_WIDTH: i32 = 800;
+    pub(crate) const SCREEN_HEIGHT: i32 = 500;
 }
 
-pub const DISPLAY_WIDTH: i32 = SCREEN_WIDTH / 2;
-pub const DISPLAY_HEIGHT: i32 = SCREEN_HEIGHT / 2;
+pub const DISPLAY_WIDTH: i32 = SCREEN_WIDTH / 8;
+pub const DISPLAY_HEIGHT: i32 = SCREEN_HEIGHT / 8;
 
 fn main() -> BError {
     // let c = BTermBuilder::simple80x50()
