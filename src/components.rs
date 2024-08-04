@@ -20,3 +20,21 @@ pub struct WantsToMove {
     pub entity: Entity,
     pub destination: Point,
 }
+
+#[derive(Copy, Clone, Debug, PartialEq)]
+pub struct Health {
+    pub current: i32,
+    pub max: i32,
+}
+
+#[derive(Clone, Debug, PartialEq)]
+pub struct Naming(pub String);
+
+#[derive(Copy, Clone, Debug, PartialEq)]
+pub struct WantsToAttack {
+    pub entity: Entity,
+    pub target: Entity,
+}
+
+#[derive(Copy, Clone, Debug, PartialEq)]
+pub struct ChasingPlayer;
