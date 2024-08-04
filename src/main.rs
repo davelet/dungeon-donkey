@@ -4,11 +4,11 @@ use bracket_lib::terminal::GameState;
 
 use prelude::*;
 
-mod map;
-mod map_builder;
 mod camera;
 mod components;
 mod factory;
+mod map;
+mod map_builder;
 mod systems;
 mod turn_state;
 
@@ -16,15 +16,15 @@ mod prelude {
     pub(crate) use bracket_lib::prelude::*;
 
     pub(crate) use crate::camera::*;
-    pub(crate) use crate::map::*;
-    pub(crate) use crate::map_builder::*;
     pub(crate) use crate::components::*;
     pub(crate) use crate::factory::*;
+    pub(crate) use crate::map::*;
+    pub(crate) use crate::map_builder::*;
     pub(crate) use crate::systems::*;
     pub(crate) use crate::turn_state::*;
-    pub use legion::*;
-    pub use legion::world::SubWorld;
     pub use legion::systems::CommandBuffer;
+    pub use legion::world::SubWorld;
+    pub use legion::*;
 
     pub(crate) const SCREEN_WIDTH: i32 = 80;
     pub(crate) const SCREEN_HEIGHT: i32 = 50;
@@ -75,6 +75,7 @@ impl GameState for State {
             TurnState::AwaitingInput => self.input_systems.execute(&mut self.ecs, &mut self.resources),
             TurnState::PlayerTurn => self.player_systems.execute(&mut self.ecs, &mut self.resources),
             TurnState::EnemyTurn => self.enemy_systems.execute(&mut self.ecs, &mut self.resources),
+            TurnState::GameOver => self.game_over(ctx),
         }
         render_draw_buffer(ctx).expect("TODO: panic message");
     }
@@ -87,7 +88,9 @@ impl State {
         let mut rng = RandomNumberGenerator::new();
         let mb = MapBuilder::new(&mut rng);
         new_player(&mut ecs, mb.player_start);
-        mb.rooms.iter().skip(1)
+        mb.rooms
+            .iter()
+            .skip(1)
             .map(|r| r.center())
             .for_each(|pos| new_monster(&mut ecs, &mut rng, pos));
         resources.insert(mb.map);
@@ -101,5 +104,27 @@ impl State {
             enemy_systems: build_enemy_scheduler(),
         }
     }
-}
 
+    fn game_over(&mut self, ctx: &mut BTerm) {
+        ctx.set_active_console(2);
+        ctx.print_color_centered(2, RED, BLACK, "your quest has ended.");
+        ctx.print_color_centered(4, WHITE, BLACK, "Slain by a monster");
+        ctx.print_color_centered(5, GREEN, YELLOW, "press 1 to play again.");
+
+        if let Some(VirtualKeyCode::Key1) = ctx.key {
+            self.ecs = World::default();
+            self.resources = Resources::default();
+            let mut rng = RandomNumberGenerator::new();
+            let mb = MapBuilder::new(&mut rng);
+            new_player(&mut self.ecs, mb.player_start);
+            mb.rooms
+                .iter()
+                .skip(1)
+                .map(|r| r.center())
+                .for_each(|pos| new_monster(&mut self.ecs, &mut rng, pos));
+            self.resources.insert(mb.map);
+            self.resources.insert(Camera::new(mb.player_start));
+            self.resources.insert(TurnState::AwaitingInput);
+        }
+    }
+}
